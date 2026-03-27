@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>DeepSeek AI 助手 - 智能对话界面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9eef5 100%);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        /* 聊天容器 */
+        .chat-container {
+            width: 100%;
+            max-width: 900px;
+            height: 90vh;
+            background: white;
+            border-radius: 28px;
+            box-shadow: 0 20px 35px -12px rgba(0, 0, 0, 0.15), 0 0 0 1px rgba(0, 0, 0, 0.02);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: all 0.2s ease;
+        }
+
+        /* 头部区域 */
+        .chat-header {
+            background: #ffffff;
+            padding: 18px 24px;
+            border-bottom: 1px solid #eef2f6;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 44px;
+            height: 44px;
+            background: linear-gradient(135deg, #10a37f, #1a7f64);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 22px;
+            font-weight: 600;
+            color: white;
+            box-shadow: 0 4px 8px rgba(16, 163, 127, 0.2);
+        }
+
+        .header-info h2 {
+            font-size: 1.35rem;
+            font-weight: 600;
+            color: #1e2a3a;
+            letter-spacing: -0.3px;
+        }
+
+        .header-info p {
+            font-size: 0.8rem;
+            color: #6c7a8e;
+            margin-top: 2px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #10b981;
+            border-radius: 50%;
+            display: inline-block;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 0.4; transform: scale(0.8);}
+            100% { opacity: 1; transform: scale(1);}
+        }
+
+        /* 消息区域 */
+        .messages-area {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 24px;
+            background: #fafcff;
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+        }
+
+        /* 自定义滚动条 */
+        .messages-area::-webkit-scrollbar {
+            width: 5px;
+        }
+
+        .messages-area::-webkit-scrollbar-track {
+            background: #eef2f8;
+            border-radius: 10px;
+        }
+
+        .messages-area::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+
+        /* 消息气泡通用样式 */
+        .message {
+            display: flex;
+            gap: 12px;
+            animation: fadeInUp 0.25s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .user-message {
+            justify-content: flex-end;
+        }
+
+        .bot-message {
+            justify-content: flex-start;
+        }
+
+        .message-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .user-avatar {
+            background: #3b82f6;
+            color: white;
+            order: 2;
+        }
+
+        .bot-avatar {
+            background: #10a37f;
+            color: white;
+        }
+
+        .message-bubble {
+            max-width: 75%;
+            padding: 12px 18px;
+            border-radius: 22px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03);
+        }
+
+        .user-bubble {
+            background: #3b82f6;
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .bot-bubble {
+            background: #ffffff;
+            color: #1e293b;
+            border: 1px solid #e9edf2;
+            border-bottom-left-radius: 5px;
+        }
+
+        /* 打字指示器（转圈风格） */
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 8px;
+        }
+
+        .typing-bubble {
+            background: #ffffff;
+            border: 1px solid #e9edf2;
+            border-radius: 22px;
+            border-bottom-left-radius: 5px;
+            padding: 12px 18px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2.5px solid #e2e8f0;
+            border-top-color: #10a37f;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .typing-text {
+            font-size: 0.85rem;
+            color: #5b6e8c;
+            font-weight: 500;
+        }
+
+        /* 输入区域 */
+        .input-area {
+            background: white;
+            border-top: 1px solid #eef2f6;
+            padding: 16px 24px 24px;
+        }
+
+        .input-wrapper {
+            display: flex;
+            gap: 12px;
+            background: #f8fafd;
+            border: 1px solid #e2e8f0;
+            border-radius: 30px;
+            padding: 6px 6px 6px 20px;
+            transition: all 0.2s;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: #10a37f;
+            box-shadow: 0 0 0 3px rgba(16, 163, 127, 0.1);
+            background: white;
+        }
+
+        .input-wrapper input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            padding: 12px 0;
+            font-size: 0.95rem;
+            outline: none;
+            color: #1e293b;
+        }
+
+        .input-wrapper input::placeholder {
+            color: #94a3b8;
+        }
+
+        .send-btn {
+            background: #10a37f;
+            border: none;
+            border-radius: 40px;
+            padding: 0 22px;
+            color: white;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            letter-spacing: 0.5px;
+        }
+
+        .send-btn:hover:not(:disabled) {
+            background: #0d8c6c;
+            transform: scale(0.96);
+        }
+
+        .send-btn:disabled {
+            background: #cbd5e1;
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+
+        /* 底部小提示 */
+        .info-tip {
+            text-align: center;
+            font-size: 0.7rem;
+            color: #8b9ab0;
+            margin-top: 12px;
+        }
+
+        /* 空状态欢迎语 */
+        .welcome-message {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding: 40px 20px;
+            color: #5f6f8a;
+        }
+
+        .welcome-icon {
+            font-size: 52px;
+            margin-bottom: 16px;
+        }
+
+        .welcome-message h3 {
+            font-size: 1.3rem;
+            font-weight: 500;
+            margin-bottom: 8px;
+            color: #1e2a3a;
+        }
+
+        .welcome-message p {
+            max-width: 380px;
+            font-size: 0.85rem;
+        }
+
+        .hide-welcome {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<div class="chat-container">
+    <!-- 头部 -->
+    <div class="chat-header">
+        <div class="avatar">DS</div>
+        <div class="header-info">
+            <h2>DeepSeek 智能助手</h2>
+            <p><span class="status-dot"></span> 在线 · 深度求索</p>
+        </div>
+    </div>
+
+    <!-- 消息展示区 -->
+    <div class="messages-area" id="messagesArea">
+        <!-- 欢迎语块，动态控制显示 -->
+        <div class="welcome-message" id="welcomeMessage">
+            <div class="welcome-icon">✨🤖</div>
+            <h3>你好，我是 DeepSeek</h3>
+            <p>我可以帮你解答问题、编写代码、分析文档等。试试在下方输入框和我聊天吧~</p>
+        </div>
+        <!-- 实际消息会动态追加到这里 -->
+    </div>
+
+    <!-- 输入区 -->
+    <div class="input-area">
+        <div class="input-wrapper">
+            <input type="text" id="messageInput" placeholder="给 DeepSeek 发送消息..." autocomplete="off" />
+            <button class="send-btn" id="sendBtn">发送 ✨</button>
+        </div>
+        <div class="info-tip">支持文本交互 · 基于 DeepSeek 模型</div>
+    </div>
+</div>
+
+<script>
+    // DOM 元素
+    const messagesContainer = document.getElementById('messagesArea');
+    const welcomeDiv = document.getElementById('welcomeMessage');
+    const inputEl = document.getElementById('messageInput');
+    const sendBtn = document.getElementById('sendBtn');
+
+    // API 基础地址 (可修改)
+    const API_BASE_URL = 'http://127.0.0.1:8080/ai/chat';
+
+    // 标记是否正在等待响应 (防止重复发送)
+    let isLoading = false;
+
+    // 当前等待的“临时消息”占位元素，用于移除或替换
+    let tempLoadingMessageId = null;
+
+    // ---------- 辅助函数 ----------
+    // 生成简单随机ID
+    function generateId() {
+        return 'msg_' + Date.now() + '_' + Math.random().toString(36).substr(2, 6);
+    }
+
+    // 滚动到底部
+    function scrollToBottom() {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }
+
+    // 移除欢迎消息 (一旦有真正的对话就隐藏)
+    function hideWelcomePermanent() {
+        if (welcomeDiv && !welcomeDiv.classList.contains('hide-welcome')) {
+            welcomeDiv.classList.add('hide-welcome');
+        }
+    }
+
+    // 添加用户消息 (右侧)
+    function appendUserMessage(text) {
+        const messageId = generateId();
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message user-message';
+        messageDiv.setAttribute('data-id', messageId);
+
+        messageDiv.innerHTML = `
+            <div class="message-bubble user-bubble">${escapeHtml(text)}</div>
+            <div class="message-avatar user-avatar">👤</div>
+        `;
+
+        // 插入到消息区域，如果欢迎消息还在且显示，则先隐藏，然后把消息放在欢迎消息之前？
+        // 但更优雅: 隐藏欢迎消息，然后把用户消息追加到容器内（欢迎消息隐藏后不影响布局）
+        if (welcomeDiv && !welcomeDiv.classList.contains('hide-welcome')) {
+            hideWelcomePermanent();
+        }
+        messagesContainer.appendChild(messageDiv);
+        scrollToBottom();
+        return messageId;
+    }
+
+    // 添加机器人消息 (最终展示)
+    function appendBotMessage(text) {
+        const messageId = generateId();
+        const messageDiv = document.createElement('div');
+        messageDiv.className = 'message bot-message';
+        messageDiv.setAttribute('data-id', messageId);
+
+        // 处理换行符转换为 <br> 或者保留 pre-wrap 样式，我们直接用div保留格式（CSS white-space: pre-wrap)
+        // 但为了更好的展示 markdown 风格? 简易转义后直接 innerText 但支持\n换行，使用 innerHTML 保留换行样式
+        const formattedText = text.replace(/\n/g, '<br>');
+
+        messageDiv.innerHTML = `
+            <div class="message-avatar bot-avatar">🤖</div>
+            <div class="message-bubble bot-bubble">${escapeHtmlButPreserveBr(formattedText)}</div>
+        `;
+        messagesContainer.appendChild(messageDiv);
+        scrollToBottom();
+        return messageId;
+    }
+
+    // 显示“正在输入中...”的转圈占位符，返回该占位元素
+    function showTypingIndicator() {
+        // 如果已存在正在加载的消息，先移除旧的（防止重复）
+        if (tempLoadingMessageId && document.getElementById(tempLoadingMessageId)) {
+            const oldLoading = document.getElementById(tempLoadingMessageId);
+            if (oldLoading) oldLoading.remove();
+        }
+
+        const loadingId = 'loading_' + Date.now();
+        const loadingDiv = document.createElement('div');
+        loadingDiv.className = 'message bot-message';
+        loadingDiv.id = loadingId;
+        loadingDiv.innerHTML = `
+            <div class="message-avatar bot-avatar">🤖</div>
+            <div class="typing-bubble">
+                <div class="spinner"></div>
+                <span class="typing-text">DeepSeek 正在思考...</span>
+            </div>
+        `;
+        messagesContainer.appendChild(loadingDiv);
+        scrollToBottom();
+        tempLoadingMessageId = loadingId;
+        return loadingId;
+    }
+
+    // 移除加载指示器
+    function removeTypingIndicator() {
+        if (tempLoadingMessageId) {
+            const loadingElem = document.getElementById(tempLoadingMessageId);
+            if (loadingElem) {
+                loadingElem.remove();
+            }
+            tempLoadingMessageId = null;
+        }
+    }
+
+    // 简易HTML转义（防范XSS）
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        }).replace(/[\uD800-\uDBFF][\uDC00-\uDFFF]/g, function(c) {
+            return c;
+        });
+    }
+
+    // 专门用于保留 <br> 标签不被转义（因为我们要手动插入换行）
+    function escapeHtmlButPreserveBr(str) {
+        if (!str) return '';
+        // 先转义，然后把 &lt;br&gt; 还原回 <br>
+        let escaped = str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+        // 将 &lt;br&gt; 还原成 <br> (注意我们生成的是 <br> 标签)
+        escaped = escaped.replace(/&lt;br&gt;/g, '<br>');
+        return escaped;
+    }
+
+    // 核心API调用
+    async function sendMessageToAI(question) {
+        // 构建请求URL: http://127.0.0.1:8080/ai/chat?question=编码后的消息
+        const url = `${API_BASE_URL}?question=${encodeURIComponent(question)}`;
+
+        try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 60000); // 60秒超时
+
+            const response = await fetch(url, {
+                method: 'GET',          // 根据你提供的接口格式: GET 请求
+                headers: {
+                    'Accept': 'application/json',
+                },
+                signal: controller.signal
+            });
+
+            clearTimeout(timeoutId);
+
+            if (!response.ok) {
+                // 处理HTTP错误状态
+                let errorDetail = `HTTP ${response.status}`;
+                try {
+                    const errData = await response.json();
+                    errorDetail = errData.msg || errData.message || errorDetail;
+                } catch(e) { /* ignore */ }
+                throw new Error(`请求失败: ${errorDetail}`);
+            }
+
+            const result = await response.json();
+            // 根据接口结构: { code, msg, data }
+            if (result && result.code === 200) {
+                // 成功返回 data 字段
+                if (result.data !== undefined && result.data !== null) {
+                    return { success: true, content: result.data };
+                } else {
+                    // 若data为空则返回友好提示
+                    return { success: true, content: "（没有返回具体内容）" };
+                }
+            } else {
+                // 业务错误
+                const errorMsg = result.msg || "未知错误";
+                throw new Error(errorMsg);
+            }
+        } catch (error) {
+            console.error("API 调用失败:", error);
+            let friendlyMsg = "";
+            if (error.name === 'AbortError') {
+                friendlyMsg = "请求超时，服务器响应较慢，请稍后再试。";
+            } else if (error.message.includes("Failed to fetch") || error.message.includes("NetworkError")) {
+                friendlyMsg = "无法连接到后端服务，请检查接口地址或后端是否启动。";
+            } else {
+                friendlyMsg = error.message || "服务异常，请稍后重试。";
+            }
+            return { success: false, error: friendlyMsg };
+        }
+    }
+
+    // 主要的发送流程: 展示用户消息 -> 展示加载转圈 -> 调用API -> 移除转圈 -> 展示回复 / 错误提示
+    async function handleSend() {
+        if (isLoading) {
+            // 如果已经在加载中，防止重复请求
+            return;
+        }
+
+        const rawQuestion = inputEl.value.trim();
+        if (!rawQuestion) {
+            // 空消息提示但不报错
+            inputEl.style.border = "1px solid #ffb3b3";
+            setTimeout(() => { inputEl.style.border = ""; }, 1000);
+            return;
+        }
+
+        // 清空输入框
+        inputEl.value = '';
+        // 调整输入框高度（不需要，单行）
+
+        // 1. 隐藏欢迎消息（如果还没有隐藏）
+        if (welcomeDiv && !welcomeDiv.classList.contains('hide-welcome')) {
+            hideWelcomePermanent();
+        }
+
+        // 2. 追加用户消息
+        appendUserMessage(rawQuestion);
+
+        // 3. 开启 loading 状态锁
+        isLoading = true;
+        sendBtn.disabled = true;
+        inputEl.disabled = true;
+
+        // 4. 显示“转圈等待”气泡 (机器人侧)
+        showTypingIndicator();
+
+        // 5. 调用接口
+        const response = await sendMessageToAI(rawQuestion);
+
+        // 6. 移除加载转圈
+        removeTypingIndicator();
+
+        // 7. 根据结果展示最终消息 或 错误消息
+        if (response.success) {
+            // 正常回复内容 (字符串)
+            let replyContent = response.content;
+            if (typeof replyContent === 'object') {
+                // 防止 data 是个对象意外情况，转为 JSON 展示
+                try {
+                    replyContent = JSON.stringify(replyContent, null, 2);
+                } catch(e) { replyContent = "数据格式异常"; }
+            }
+            if (replyContent === "" || replyContent === null) {
+                replyContent = "（收到空响应）";
+            }
+            appendBotMessage(replyContent);
+        } else {
+            // 错误情况展示错误消息（红色风格？但我们用普通风格加个提示）
+            const errorMsg = `⚠️ ${response.error || "请求失败，请检查网络或后端状态。"}`;
+            appendBotMessage(errorMsg);
+        }
+
+        // 8. 恢复按钮和输入框
+        isLoading = false;
+        sendBtn.disabled = false;
+        inputEl.disabled = false;
+        inputEl.focus();
+
+        // 滚动到底部（追加消息后自动滚动）
+        scrollToBottom();
+    }
+
+    // 支持回车发送 (并且不会产生换行，input 单行)
+    function onInputKeyPress(event) {
+        if (event.key === 'Enter' && !event.shiftKey) {
+            event.preventDefault();
+            if (!isLoading) {
+                handleSend();
+            }
+        }
+    }
+
+    // 初始化事件监听
+    function init() {
+        sendBtn.addEventListener('click', handleSend);
+        inputEl.addEventListener('keypress', onInputKeyPress);
+        inputEl.focus();
+
+        // 如果欢迎消息存在，默认显示，无历史消息时保留
+        // 可添加示例演示: 首次加载自动发送默认问候？可选项，但为了简洁不加自动问候，让用户主动发送
+        // 但为了使界面更友好，可加一条模拟助手消息？不需要，保持清爽
+        // 另外为了防止空白区域点击导致失去焦点无关紧要
+    }
+
+    // 启动
+    init();
+</script>
+</body>
+</html>
+```
