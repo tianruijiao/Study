@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="SpringAIFirstAttempt" />
         <module name="SpringAIEmbedding" />
+        <module name="FirstDemo" />
       </profile>
     </annotationProcessing>
   </component>
