@@ -5,6 +5,7 @@
     <option name="originalFiles">
       <list>
         <option value="$PROJECT_DIR$/SpringAIFirstAttempt/pom.xml" />
+        <option value="$PROJECT_DIR$/SpringAIEmbedding/pom.xml" />
       </list>
     </option>
   </component>
