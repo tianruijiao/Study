@@ -42,7 +42,7 @@ public class DemoController {
 
     @GetMapping("/clientStream")
     public Flux<String> clientStream(@RequestParam("question") String question) {
-        return qWenChatClient.prompt().user(question).stream().content();
+        return qWenChatClient.prompt().system("你是一个美食顾问，你只能回答美食相关的问题").user(question).stream().content();
     }
 
 }
