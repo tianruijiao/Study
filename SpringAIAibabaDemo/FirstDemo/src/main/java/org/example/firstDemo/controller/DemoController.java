@@ -1,6 +1,7 @@
 package org.example.firstDemo.controller;
 
 import jakarta.annotation.Resource;
+import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.model.ChatModel;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -18,6 +19,12 @@ public class DemoController {
     @Resource(name = "deepSeek")
     private ChatModel deepSeekChatModel;
 
+    @Resource(name = "qWenChatClient")
+    private ChatClient qWenChatClient;
+
+    @Resource(name = "deepSeekChatClient")
+    private ChatClient deepSeekChatClient;
+
     @GetMapping("/chat")
     public String chat(@RequestParam("question") String question) {
         return deepSeekChatModel.call(question);
@@ -26,6 +33,16 @@ public class DemoController {
     @GetMapping("/chatStream")
     public Flux<String> chatStream(@RequestParam("question") String question) {
         return qWenChatModel.stream(question);
+    }
+
+    @GetMapping("/client")
+    public String client(@RequestParam("question") String question) {
+        return deepSeekChatClient.prompt().user(question).call().content();
+    }
+
+    @GetMapping("/clientStream")
+    public Flux<String> clientStream(@RequestParam("question") String question) {
+        return qWenChatClient.prompt().user(question).stream().content();
     }
 
 }
