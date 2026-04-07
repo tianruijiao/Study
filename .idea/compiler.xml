@@ -6,9 +6,10 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="SpringAIFirstAttempt" />
         <module name="SpringAIEmbedding" />
+        <module name="OllamaDemo" />
         <module name="FirstDemo" />
+        <module name="SpringAIFirstAttempt" />
       </profile>
     </annotationProcessing>
   </component>

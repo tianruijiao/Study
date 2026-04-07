@@ -1,0 +1,17 @@
+server:
+  port: 8081
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
+spring:
+  application:
+    name: OllamaDemo
+  ai:
+    dashscope:
+      api-key: sk-b7a39383b7fe4f4c81c68e8912493f8c
+    ollama:
+      base-url: http://localhost:11434
+      chat:
+        model: qwen3:4b
