@@ -1,0 +1,18 @@
+server:
+  port: 8084
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
+spring:
+  application:
+    name: Langchain4jDemo1
+langchain4j:
+  open-ai:
+    chat-model:
+      api-key: sk-db2325b982f24d94a8c7e254bcc81b0c
+      model-name: deepseek-chat
+      base-url: https://api.deepseek.com/v1
+      log-requests: true
+      log-responses: true

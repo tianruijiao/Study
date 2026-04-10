@@ -11,6 +11,8 @@
     <modules>
         <module>FirstDemo</module>
         <module>OllamaDemo</module>
+        <module>Langchain4jDemo</module>
+        <module>Langchain4jDemo1</module>
     </modules>
 
     <properties>

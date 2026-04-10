@@ -10,6 +10,8 @@
         <module name="OllamaDemo" />
         <module name="FirstDemo" />
         <module name="SpringAIFirstAttempt" />
+        <module name="Langchain4jDemo1" />
+        <module name="Langchain4jDemo" />
       </profile>
     </annotationProcessing>
   </component>

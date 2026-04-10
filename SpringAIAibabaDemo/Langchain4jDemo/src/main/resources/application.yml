@@ -1,0 +1,13 @@
+server:
+  port: 8083
+  servlet:
+    encoding:
+      charset: UTF-8
+      force: true
+      enabled: true
+spring:
+  application:
+    name: Langchain4jDemo
+api-key:
+  qWen: sk-b7a39383b7fe4f4c81c68e8912493f8c
+  deepSeek: sk-db2325b982f24d94a8c7e254bcc81b0c
