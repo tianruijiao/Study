@@ -32,6 +32,7 @@ public class LLMConfig {
      */
     @Bean
     public ChatMemoryProvider chatMemoryProvider() {
+        // 回话基于用户ID进行保存模糊匹配记忆
         // 创建一个ConcurrentHashMap, 用于保存会话, 根据用户ID来保存不同的会话
         ConcurrentHashMap<Long, ChatMemory> map = new ConcurrentHashMap<>();
         // 返回ChatMemoryProvider的实例

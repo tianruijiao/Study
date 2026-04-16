@@ -1,0 +1,8 @@
+server:
+  port: 8002
+  servlet:
+    # 解决返回model返回乱码
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true

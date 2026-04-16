@@ -6,9 +6,11 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="SpringAIEmbedding" />
+        <module name="springai-alibaba-mcp-server" />
         <module name="OllamaDemo" />
+        <module name="SpringAIEmbedding" />
         <module name="FirstDemo" />
+        <module name="springai-alibaba-rag" />
         <module name="SpringAIFirstAttempt" />
         <module name="Langchain4jDemo1" />
         <module name="Langchain4jDemo" />
@@ -19,6 +21,7 @@
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
       <module name="SpringAIEmbedding" options="-parameters" />
       <module name="SpringAIFirstAttempt" options="-parameters" />
+      <module name="springai-alibaba-rag" options="" />
     </option>
   </component>
 </project>

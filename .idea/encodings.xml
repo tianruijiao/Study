@@ -13,5 +13,11 @@
     <file url="file://$PROJECT_DIR$/SpringAIAibabaDemo/src/main/resources" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/SpringAIEmbedding/src/main/java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/SpringAIFirstAttempt/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springai-examples/springai-alibaba-mcp-server/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springai-examples/springai-alibaba-mcp-server/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springai-examples/springai-alibaba-rag/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springai-examples/springai-alibaba-rag/src/main/resources" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springai-examples/src/main/java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/springai-examples/src/main/resources" charset="UTF-8" />
   </component>
 </project>
