@@ -1,0 +1,21 @@
+server:
+  port: 8003
+  servlet:
+    # 解决返回model返回乱码
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
+
+spring:
+  ai:
+    zhipuai:
+      api-key: ${zhipu_key}
+      base-url: "https://open.bigmodel.cn/api/paas/"
+      chat:
+        options:
+          model: "glm-4.5"
+      embedding:
+        options:
+          model: embedding-3 #使用嵌入模型的名称
+          dimensions: 256 # 嵌入向量的维度

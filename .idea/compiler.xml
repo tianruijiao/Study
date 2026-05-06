@@ -8,6 +8,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="springai-alibaba-mcp-server" />
         <module name="OllamaDemo" />
+        <module name="Springai-alibaba-graph" />
         <module name="SpringAIEmbedding" />
         <module name="FirstDemo" />
         <module name="springai-alibaba-rag" />

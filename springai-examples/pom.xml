@@ -11,6 +11,7 @@
     <modules>
         <module>springai-alibaba-rag</module>
         <module>springai-alibaba-mcp-server</module>
+        <module>Springai-alibaba-graph</module>
     </modules>
 
     <properties>
